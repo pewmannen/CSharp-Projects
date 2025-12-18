@@ -1,0 +1,14 @@
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\bin\Debug\net8.0\HelloFromCSharp.exe
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\bin\Debug\net8.0\HelloFromCSharp.deps.json
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\bin\Debug\net8.0\HelloFromCSharp.runtimeconfig.json
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\bin\Debug\net8.0\HelloFromCSharp.dll
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\bin\Debug\net8.0\HelloFromCSharp.pdb
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.AssemblyInfoInputs.cache
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.AssemblyInfo.cs
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.csproj.CoreCompileInputs.cache
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.dll
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\refint\HelloFromCSharp.dll
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.pdb
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.genruntimeconfig.cache
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\ref\HelloFromCSharp.dll

@@ -1,0 +1,14 @@
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\bin\Debug\net8.0\BethanysPieShopHRM.exe
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\bin\Debug\net8.0\BethanysPieShopHRM.deps.json
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\bin\Debug\net8.0\BethanysPieShopHRM.runtimeconfig.json
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\bin\Debug\net8.0\BethanysPieShopHRM.dll
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\bin\Debug\net8.0\BethanysPieShopHRM.pdb
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.AssemblyInfoInputs.cache
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.AssemblyInfo.cs
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.csproj.CoreCompileInputs.cache
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.dll
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\refint\BethanysPieShopHRM.dll
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.pdb
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\BethanysPieShopHRM.genruntimeconfig.cache
+D:\Documents\CSharp Projects\Repos\BethanysPieShopHRM\BethanysPieShopHRM\obj\Debug\net8.0\ref\BethanysPieShopHRM.dll
