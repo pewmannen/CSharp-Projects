@@ -1,0 +1,58 @@
+public class User
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+public static class UserStats
+{
+    public static double CalculateAverageAge(List<User> users)
+    {
+        double averageAge = 0;
+        int validUsers = 0;
+
+        for (int i = 0; i < users.Count; i++)
+        {
+            if(users[i] == null)
+            {
+                continue;
+                
+            }
+
+            if (users[i].Age <= 0)
+            {
+                continue;
+            }
+
+            validUsers++;
+            averageAge = averageAge + users[i].Age ;
+
+        }
+
+        if (validUsers == 0)
+        {
+            return 0;
+        }
+
+        averageAge = averageAge / validUsers;
+
+        return averageAge;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var users = new List<User>
+        {
+            new User { Name = "Anna", Age = 30 },
+            new User { Name = "Bob", Age = -5 },
+            null,
+            new User { Name = "Chris", Age = 20 }
+        };
+
+        Console.WriteLine(UserStats.CalculateAverageAge(users));
+        // Expected output: 25
+    }
+}

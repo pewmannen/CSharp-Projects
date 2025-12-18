@@ -12,3 +12,4 @@ D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net
 D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.pdb
 D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.genruntimeconfig.cache
 D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\ref\HelloFromCSharp.dll
+D:\Documents\CSharp Projects\Repos\HelloFromCSharp\HelloFromCSharp\obj\Debug\net8.0\HelloFromCSharp.sourcelink.json
