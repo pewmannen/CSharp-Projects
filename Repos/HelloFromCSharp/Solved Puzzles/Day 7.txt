@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+
+//Problem Summary
+//You are given a list of employees. Each employee belongs to a Department and has a Salary.
+//Return a dictionary that contains the total salary per department.
+
+//Rules
+//If the list is null, return an empty dictionary
+//Ignore null employees
+//Ignore employees where:
+//Department is null or empty
+//Salary is less than or equal to 0
+//Department matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+
+public class Employee
+{
+    public string Department { get; set; }
+    public decimal Salary { get; set; }
+}
+
+public static class SalaryStats
+{
+    public static Dictionary<string, decimal> TotalSalaryByDepartment(List<Employee> employees)
+    {
+        var totalSalaryPerDepartment = new Dictionary<string, decimal>();
+
+        if (employees == null)
+        {
+            return totalSalaryPerDepartment;
+        }
+
+        foreach (var employee in employees)
+        {
+            if (employee == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(employee.Department))
+            {
+                continue;
+            }
+
+            if (employee.Salary <= 0)
+            {
+                continue;
+            }
+
+            var Key = employee.Department.ToUpperInvariant();
+
+            if (totalSalaryPerDepartment.ContainsKey(Key))
+            {
+                totalSalaryPerDepartment[Key] += employee.Salary;
+            }
+            else
+            {
+                totalSalaryPerDepartment[Key] = employee.Salary;
+            }
+        }
+
+        return totalSalaryPerDepartment;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var employees = new List<Employee>
+        {
+            new Employee { Department = "IT", Salary = 3000m },
+            new Employee { Department = "it", Salary = 2500m },
+            new Employee { Department = "HR", Salary = 2000m },
+            new Employee { Department = "", Salary = 4000m },   // ignore
+            null,
+            new Employee { Department = "HR", Salary = -500m }  // ignore
+        };
+
+        var result = SalaryStats.TotalSalaryByDepartment(employees);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // IT => 5500
+        // HR => 2000
+    }
+}

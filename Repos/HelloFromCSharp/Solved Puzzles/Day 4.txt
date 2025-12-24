@@ -1,0 +1,90 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
+
+//Problem Summary
+
+//Given a list of tickets, return a dictionary of counts per status.
+
+//Requirements
+
+//Ignore null tickets
+
+//Ignore tickets with null/empty status
+
+//Status counting is case-insensitive, but output keys must be UPPERCASE
+
+//Return an empty dictionary if input is null or no valid tickets
+
+//Do not throw
+
+
+public class Ticket
+{
+    public string Status { get; set; }   // e.g. "Open", "CLOSED", "in_progress"
+}
+
+public static class TicketStats
+{
+    public static Dictionary<string, int> CountByStatus(List<Ticket> tickets)
+    {
+        var counts = new Dictionary<string, int>();
+
+        if (tickets == null)
+        {
+            return counts;
+        }
+
+        foreach (var ticket in tickets)
+        {
+            if (ticket == null)
+            {
+                continue; 
+            }
+            if (string.IsNullOrWhiteSpace(ticket.Status))
+            {
+                continue;
+            }
+
+            var Key = ticket.Status.ToUpperInvariant();
+
+            if (counts.ContainsKey(Key))
+            {
+                counts[Key]++;
+            }
+            else
+            {
+                counts[Key] = 1;
+            }
+        }
+
+        return counts;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var tickets = new List<Ticket>
+        {
+            new Ticket { Status = "Open" },
+            new Ticket { Status = "open" },
+            new Ticket { Status = "CLOSED" },
+            new Ticket { Status = "In_Progress" },
+            new Ticket { Status = "in_progress" },
+            new Ticket { Status = "" },     // ignore
+            null
+        };
+
+        var result = TicketStats.CountByStatus(tickets);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected counts (order doesn't matter):
+        // OPEN => 2
+        // CLOSED => 1
+        // IN_PROGRESS => 2
+    }
+}

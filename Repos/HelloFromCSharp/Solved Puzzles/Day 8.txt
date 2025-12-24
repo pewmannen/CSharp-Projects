@@ -1,0 +1,105 @@
+using System;
+using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+//Problem Summary
+//You are given a list of purchases. Each purchase has a Category and an Amount.
+//Return a dictionary where each key is a category (uppercase) and the value is a small summary object containing:
+//Count = number of valid purchases in that category
+//TotalAmount = sum of amounts for that category
+
+//Rules
+//If the list is null, return an empty dictionary
+//Ignore null purchases
+//Ignore purchases where:
+//Category is null / empty / whitespace
+//Amount <= 0
+//Category matching is case-insensitive (normalize to uppercase)
+//Do not throw exceptions
+
+public class Purchase
+{
+    public string Category { get; set; }
+    public decimal Amount { get; set; }
+}
+
+public class CategorySummary
+{
+    public int Count { get; set; }
+    public decimal TotalAmount { get; set; }
+}
+
+public static class PurchaseStats
+{
+    public static Dictionary<string, CategorySummary> BuildCategorySummaries(List<Purchase> purchases)
+    {
+        var summaryContainment = new Dictionary<string, CategorySummary>();
+
+        if (purchases == null)
+        {
+            return summaryContainment;
+        }
+
+        foreach(var purchase in purchases)
+        {
+            if (purchase == null)
+            {
+                continue; 
+            }
+
+            if (string.IsNullOrWhiteSpace(purchase.Category))
+            {
+                continue;
+            }
+
+            if(purchase.Amount <= 0)
+            {
+                continue;
+            }
+
+            var Key = purchase.Category.ToUpperInvariant();
+            
+            if (summaryContainment.ContainsKey(Key))
+            {
+                summaryContainment[Key].Count++;
+                summaryContainment[Key].TotalAmount += purchase.Amount;
+            }
+            // IF key doesn't exist you MUST create new one "summaryContainment[Key] = new CategorySummary();" or else will through exception
+            // This is the case since we are using obj instead of decimal or int. "new Dictionary<string, CategorySummary>();"
+            else
+            {
+                summaryContainment[Key] = new CategorySummary();
+                summaryContainment[Key].Count = 1;
+                summaryContainment[Key].TotalAmount = purchase.Amount;
+            }
+        }
+
+        return summaryContainment;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var purchases = new List<Purchase>
+        {
+            new Purchase { Category = "Books", Amount = 10m },
+            new Purchase { Category = "books", Amount = 15m },
+            new Purchase { Category = "Games", Amount = 60m },
+            new Purchase { Category = "Books", Amount = -5m },   // ignore
+            null,
+            new Purchase { Category = "", Amount = 100m },       // ignore
+            new Purchase { Category = "games", Amount = 20m }
+        };
+
+        var result = PurchaseStats.BuildCategorySummaries(purchases);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key}: Count={kvp.Value.Count}, Total={kvp.Value.TotalAmount}");
+
+        // Expected output (order doesn't matter):
+        // BOOKS: Count=2, Total=25
+        // GAMES: Count=2, Total=80
+    }
+}

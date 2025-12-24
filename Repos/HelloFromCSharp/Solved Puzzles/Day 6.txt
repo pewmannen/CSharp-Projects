@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+
+//Problem Summary
+//You are given a list of devices. Each device has a Type.
+//Return a dictionary that counts how many devices exist for each type.
+
+//Rules (Fewer Than Before)
+//If the list is null, return an empty dictionary
+//Ignore null devices
+//Ignore devices where Type is null or empty
+//Type matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+
+public class Device
+{
+    public string Type { get; set; }
+}
+
+public static class DeviceStats
+{
+    public static Dictionary<string, int> CountByType(List<Device> devices)
+    {
+        var countDeviceType = new Dictionary<string, int>();
+        if (devices == null)
+        {
+            return countDeviceType;
+        }
+
+        foreach (var device in devices)
+        {
+            if (device == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrEmpty(device.Type))
+            {
+                continue;
+            }
+
+            var Key = device.Type.ToUpperInvariant();
+
+            if (countDeviceType.ContainsKey(Key))
+            {
+                countDeviceType[Key]++;
+            }
+            else
+            {
+                countDeviceType[Key] = 1;
+            }
+
+        }
+
+        return countDeviceType;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var devices = new List<Device>
+        {
+            new Device { Type = "Phone" },
+            new Device { Type = "phone" },
+            new Device { Type = "Tablet" },
+            null,
+            new Device { Type = "" },
+            new Device { Type = "TABLET" }
+        };
+
+        var result = DeviceStats.CountByType(devices);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output:
+        // PHONE => 2
+        // TABLET => 2
+    }
+}

@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
+
+//Problem
+//You are given a list of players. Each player has a Team name.
+//Return a dictionary that counts how many players are on each team.
+
+//Rules
+//Ignore null players
+//Ignore players where Team is null or empty
+//Team matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//If input list is null, return an empty dictionary
+//Do not throw exceptions
+
+public class Player
+{
+    public string? Team { get; set; }
+}
+
+public static class TeamStats
+{
+    public static Dictionary<string, int> CountByTeam(List<Player> players)
+    {
+        var playerCount = new Dictionary<string, int>();
+
+        if (players == null)
+        {
+            return playerCount;
+        }
+
+        // write your solution
+        foreach (var player in players)
+        {
+
+            if (player == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(player.Team))
+            {
+                continue;
+            }
+
+            var Key = player.Team.ToUpperInvariant();
+
+            if (playerCount.ContainsKey(Key))
+            {
+                playerCount[Key]++;
+            }
+            else
+            {
+                playerCount[Key] = 1;
+            }
+
+        }
+
+        return playerCount;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var players = new List<Player>
+        {
+            new Player { Team = "Red" },
+            new Player { Team = "red" },
+            new Player { Team = "Blue" },
+            new Player { Team = "" },
+            null,
+            new Player { Team = "BLUE" }
+        };
+
+        var result = TeamStats.CountByTeam(players);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // RED => 2
+        // BLUE => 2
+    }
+}

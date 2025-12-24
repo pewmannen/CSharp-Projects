@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
+
+//Problem Summary
+
+//You are given a list of strings representing transactions in the format:
+
+//< id >,< amount >,< currency >
+
+//Example:
+//A12,19.95, EUR
+
+//Implement a function that calculates the total amount for a specified currency.
+
+//Requirements
+
+//Ignore null or whitespace lines
+
+//Ignore lines that do not have exactly 3 comma-separated parts
+
+//Ignore transactions where:
+
+//amount cannot be parsed as decimal
+
+//amount <= 0
+
+//currency is null/empty
+
+//Currency match must be case-insensitive
+
+//Return total for matching currency
+
+//If nothing matches, return 0
+
+//Do not throw exceptions
+
+public static class TransactionCalculator
+{
+    public static decimal CalculateTotalForCurrency(List<string> lines, string currency)
+    {
+        if (lines == null || string.IsNullOrWhiteSpace(currency))
+        {
+            return 0;
+        }
+
+        decimal total = 0;
+
+        for (int i = 0; i < lines.Count; i++)
+        {
+            if (string.IsNullOrWhiteSpace(lines[i]))
+            {
+                continue;
+            }
+
+            //splits the list into 3 parts (separatedParts[1] hold currency amount and separatedParts[2] holds currency type)
+            var separatedParts = lines[i].Split(',');
+
+            if (separatedParts.Length != 3)
+            {
+                continue;
+            }
+
+            if (!decimal.TryParse(separatedParts[1].Trim(), NumberStyles.Number, CultureInfo.InvariantCulture ,out decimal amount))
+            {
+                continue;
+            }
+
+            if (amount <= 0)
+            {
+                continue;
+            }
+
+            if (!string.Equals(separatedParts[2].Trim(), currency, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            total += amount;
+
+        }
+
+        return total;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var lines = new List<string>
+        {
+            "A1,19.95,EUR",
+            "A2,10,eur",
+            "A3,-5,EUR",              // ignore (<= 0)
+            "A4,notanumber,EUR",       // ignore (bad decimal)
+            "A5,25,USD",               // ignore (wrong currency)
+            "badformat",               // ignore
+            "A6,  5.50  , EUR ",        // should count (spaces)
+            null,
+            "   "
+        };
+
+        Console.WriteLine(TransactionCalculator.CalculateTotalForCurrency(lines, "EUR"));
+        // Expected output: 35.45 (19.95 + 10 + 5.50)
+    }
+}
