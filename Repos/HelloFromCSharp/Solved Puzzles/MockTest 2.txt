@@ -1,0 +1,90 @@
+using System;
+using System.Collections.Generic;
+
+//Problem Summary
+//You are given a list of files. Each file has a Type and a SizeKb.
+//Return a dictionary that maps each file type to the number of valid files of that type.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null files
+//Ignore files where:
+//Type is null or empty
+//SizeKb is less than or equal to 0
+//Type matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class FileEntry
+{
+    public string Type { get; set; }
+    public int SizeKb { get; set; }
+}
+
+public static class FileStats
+{
+    public static Dictionary<string, int> CountByType(List<FileEntry> files)
+    {
+        var validFilesType = new Dictionary<string, int>();
+        if (files == null)
+        {
+            return validFilesType;
+        }
+
+        foreach (var file in files)
+        {
+            if (file == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(file.Type))
+            {
+                continue;
+            }
+
+            if (file.SizeKb <= 0)
+            {
+                continue;
+            }
+
+            var Key = file.Type.ToUpperInvariant();
+
+            if (validFilesType.ContainsKey(Key))
+            {
+                validFilesType[Key]++;
+            }
+            else
+            {
+                validFilesType[Key] = 1;
+            }
+        }
+
+        return validFilesType;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var files = new List<FileEntry>
+        {
+            new FileEntry { Type = "jpg", SizeKb = 120 },
+            new FileEntry { Type = "JPG", SizeKb = 300 },
+            new FileEntry { Type = "png", SizeKb = 200 },
+            new FileEntry { Type = "", SizeKb = 500 },    // ignore
+            null,
+            new FileEntry { Type = "png", SizeKb = -10 }  // ignore
+        };
+
+        var result = FileStats.CountByType(files);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // JPG => 2
+        // PNG => 1
+    }
+}

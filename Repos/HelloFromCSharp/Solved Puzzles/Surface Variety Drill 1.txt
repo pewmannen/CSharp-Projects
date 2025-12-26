@@ -1,0 +1,89 @@
+using System;
+using System.Collections.Generic;
+
+//Problem Summary
+//You are given a list of sensor readings. Each reading has a SensorId and a Value.
+//Return a dictionary that maps each sensor to the total value of valid readings above a threshold.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null readings
+//Ignore readings where:
+//SensorId is null or empty
+//Value is less than or equal to the threshold
+//SensorId matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class SensorReading
+{
+    public string SensorId { get; set; }
+    public double Value { get; set; }
+}
+
+public static class SensorStats
+{
+    public static Dictionary<string, double> TotalAboveThreshold(List<SensorReading> readings, double threshold)
+    {
+        var validThresholdReading = new Dictionary<string, double>();
+        if (readings == null)
+        {
+            return validThresholdReading;
+        }
+
+        foreach (var sensorReading in readings)
+        {
+            if (sensorReading == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(sensorReading.SensorId))
+            {
+                continue;
+            }
+
+            if (sensorReading.Value <= threshold)
+            {
+                continue;
+            }
+
+            var Key = sensorReading.SensorId.ToUpperInvariant();
+
+            if (validThresholdReading.ContainsKey(Key))
+            {
+                validThresholdReading[Key] += sensorReading.Value;
+            }
+            else
+            {
+                validThresholdReading[Key] = sensorReading.Value;
+            }
+        }
+
+        return validThresholdReading;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var readings = new List<SensorReading>
+        {
+            new SensorReading { SensorId = "A1", Value = 10.5 },
+            new SensorReading { SensorId = "a1", Value = 20.0 },
+            new SensorReading { SensorId = "B2", Value = 5.0 },   // ignore (<= threshold)
+            new SensorReading { SensorId = "A1", Value = 3.0 },   // ignore
+            null,
+            new SensorReading { SensorId = "", Value = 50.0 }     // ignore
+        };
+
+        var result = SensorStats.TotalAboveThreshold(readings, threshold: 6.0);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output:
+        // A1 => 30.5
+    }
+}

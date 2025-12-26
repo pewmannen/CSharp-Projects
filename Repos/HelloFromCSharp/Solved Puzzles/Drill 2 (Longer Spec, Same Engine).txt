@@ -1,0 +1,104 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
+
+//Problem Summary
+//You are given a list of API requests. Each request has an Endpoint and a ResponseTimeMs.
+//Return a dictionary that maps each endpoint to a summary containing:
+//Count of valid requests
+//TotalResponseTime (sum of response times)
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null requests
+//Ignore requests where:
+//Endpoint is null or empty
+//ResponseTimeMs is less than 1
+//Endpoint matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class ApiRequest
+{
+    public string Endpoint { get; set; }
+    public int ResponseTimeMs { get; set; }
+}
+
+public class EndpointSummary
+{
+    public int Count { get; set; }
+    public int TotalResponseTime { get; set; }
+}
+
+public static class ApiStats
+{
+    public static Dictionary<string, EndpointSummary> BuildEndpointSummaries(List<ApiRequest> requests)
+    {
+        var endpointContainment = new Dictionary<string, EndpointSummary>();
+
+        if ( requests == null)
+        {
+            return endpointContainment;
+        }
+
+        foreach (var apiRequest in requests)
+        {
+            if (apiRequest == null)
+            {
+                continue; 
+            }
+
+            if (string.IsNullOrWhiteSpace(apiRequest.Endpoint))
+            {
+                continue;
+            }
+
+            if (apiRequest.ResponseTimeMs < 1)
+            {
+                continue;
+            }
+
+            var Key = apiRequest.Endpoint.ToUpperInvariant();
+
+            if (endpointContainment.ContainsKey(Key))
+            {
+                endpointContainment[Key].Count++;
+                endpointContainment[Key].TotalResponseTime += apiRequest.ResponseTimeMs;
+            }
+            else
+            {
+                endpointContainment[Key] = new EndpointSummary();
+                endpointContainment[Key].Count = 1;
+                endpointContainment[Key].TotalResponseTime = apiRequest.ResponseTimeMs;
+            }
+        }
+
+        return endpointContainment;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var requests = new List<ApiRequest>
+        {
+            new ApiRequest { Endpoint = "/login", ResponseTimeMs = 120 },
+            new ApiRequest { Endpoint = "/LOGIN", ResponseTimeMs = 80 },
+            new ApiRequest { Endpoint = "/data", ResponseTimeMs = 200 },
+            new ApiRequest { Endpoint = "/login", ResponseTimeMs = 0 },   // ignore
+            null,
+            new ApiRequest { Endpoint = "", ResponseTimeMs = 500 }        // ignore
+        };
+
+        var result = ApiStats.BuildEndpointSummaries(requests);
+
+        foreach (var kvp in result)
+            Console.WriteLine(
+                $"{kvp.Key}: Count={kvp.Value.Count}, Total={kvp.Value.TotalResponseTime}");
+
+        // Expected output:
+        // /LOGIN: Count=2, Total=200
+        // /DATA: Count=1, Total=200
+    }
+}

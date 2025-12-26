@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Threading.Channels;
+
+//Problem Summary
+//You are given a list of messages. Each message has a Channel and a Length.
+//Return a dictionary that maps each channel to the total length of valid messages.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null messages
+//Ignore messages where:
+//Channel is null or empty
+//Length is less than or equal to 0
+//Channel matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class Message
+{
+    public string Channel { get; set; }
+    public int Length { get; set; }
+}
+
+public static class MessageStats
+{
+    public static Dictionary<string, int> TotalLengthByChannel(List<Message> messages)
+    {
+        var validTotalMessages = new Dictionary<string, int>();
+
+        if (messages == null)
+        {
+            return validTotalMessages;
+        }
+        foreach (var message in messages)
+        {
+            if (message == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(message.Channel))
+            {
+                continue;
+            }
+
+            if (message.Length <= 0)
+            {
+                continue;
+            }
+
+            var Key = message.Channel.ToUpperInvariant();
+
+            if (validTotalMessages.ContainsKey(Key))
+            {
+                validTotalMessages[Key] += message.Length;
+            }
+            else
+            {
+                validTotalMessages[Key] = message.Length;
+            }
+        }
+
+        return validTotalMessages;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var messages = new List<Message>
+        {
+            new Message { Channel = "Email", Length = 120 },
+            new Message { Channel = "email", Length = 80 },
+            new Message { Channel = "SMS", Length = 50 },
+            new Message { Channel = "", Length = 200 },   // ignore
+            null,
+            new Message { Channel = "SMS", Length = -10 } // ignore
+        };
+
+        var result = MessageStats.TotalLengthByChannel(messages);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output:
+        // EMAIL => 200
+        // SMS => 50
+    }
+}

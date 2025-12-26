@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+
+//Problem Summary
+//You are given a list of events. Each event has a Source and a Severity.
+//Return a dictionary that maps each source to the count of critical events.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null events
+//Ignore events where:
+//Source is null or empty
+//Severity is less than 3
+//Source matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class Event
+{
+    public string Source { get; set; }
+    public int Severity { get; set; }
+}
+
+public static class EventStats
+{
+    public static Dictionary<string, int> CountCriticalBySource(List<Event> events)
+    {
+        var criticalSourceEvent = new Dictionary<string, int>();
+        if(events == null)
+        {
+            return criticalSourceEvent;
+        }
+
+        foreach(var eventSource in events)
+        { 
+            if (eventSource == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(eventSource.Source))
+            {
+                continue;
+            }
+
+            if (eventSource.Severity < 3)
+            {
+                continue;
+            }
+            Console.WriteLine(eventSource.Source);
+
+            var Key = eventSource.Source.ToUpperInvariant();
+
+            if (criticalSourceEvent.ContainsKey(Key))
+            {
+                criticalSourceEvent[Key]++;
+            }
+            else
+            {
+                criticalSourceEvent[Key] = 1;
+
+            }
+        }
+
+        return criticalSourceEvent;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var events = new List<Event>
+        {
+            new Event { Source = "API", Severity = 4 },
+            new Event { Source = "api", Severity = 3 },
+            new Event { Source = "UI", Severity = 2 },     // ignore
+            new Event { Source = "API", Severity = 1 },    // ignore
+            null,
+            new Event { Source = "", Severity = 5 }        // ignore
+        };
+
+        var result = EventStats.CountCriticalBySource(events);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output:
+        // API => 2
+    }
+}

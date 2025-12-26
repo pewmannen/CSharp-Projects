@@ -1,0 +1,101 @@
+using System;
+using System.Collections.Generic;
+
+//Problem Summary
+//You are given a list of transactions. Each transaction has an AccountId and an Amount.
+//Return a dictionary that maps each account to a summary containing:
+//Count of valid transactions
+//TotalAmount of valid transactions
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null transactions
+//Ignore transactions where:
+//AccountId is null or empty
+//Amount is less than 1
+//AccountId matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class Transaction
+{
+    public string AccountId { get; set; }
+    public decimal Amount { get; set; }
+}
+
+public class AccountSummary
+{
+    public int Count { get; set; }
+    public decimal TotalAmount { get; set; }
+}
+
+public static class TransactionStats
+{
+    public static Dictionary<string, AccountSummary> BuildSummaries(List<Transaction> transactions)
+    {
+        var validAccountSummary = new Dictionary<string, AccountSummary>();
+
+        if (transactions == null)
+        {
+            return validAccountSummary;
+        }
+
+        foreach (var transaction in transactions)
+        {
+            if (transaction == null)
+            {
+                continue; 
+            }
+            if (string.IsNullOrWhiteSpace(transaction.AccountId))
+            {
+                continue;
+            }
+            if (transaction.Amount < 1)
+            {
+                continue;
+            }
+
+            var Key = transaction.AccountId.ToUpperInvariant();
+
+            if (validAccountSummary.ContainsKey(Key))
+            {
+                validAccountSummary[Key].Count++;
+                validAccountSummary[Key].TotalAmount += transaction.Amount;
+            }
+            else
+            {
+                validAccountSummary[Key] = new AccountSummary();
+                validAccountSummary[Key].Count = 1;
+                validAccountSummary[Key].TotalAmount = transaction.Amount;
+            }
+        }
+
+        return validAccountSummary;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var transactions = new List<Transaction>
+        {
+            new Transaction { AccountId = "ACC1", Amount = 100m },
+            new Transaction { AccountId = "acc1", Amount = 50m },
+            new Transaction { AccountId = "ACC2", Amount = 200m },
+            new Transaction { AccountId = "ACC1", Amount = 0m },   // ignore
+            null,
+            new Transaction { AccountId = "", Amount = 500m }     // ignore
+        };
+
+        var result = TransactionStats.BuildSummaries(transactions);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key}: Count={kvp.Value.Count}, Total={kvp.Value.TotalAmount}");
+
+        // Expected output:
+        // ACC1: Count=2, Total=150
+        // ACC2: Count=1, Total=200
+    }
+}
+

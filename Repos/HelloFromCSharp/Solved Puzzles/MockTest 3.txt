@@ -1,0 +1,89 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
+
+//Problem Summary
+//You are given a list of log entries. Each log entry has a Level and a Message.
+//Return a dictionary that maps each log level to the number of valid log entries for that level.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null log entries
+//Ignore log entries where:
+//Level is null or empty
+//Message is null or empty
+//Level matching is case -insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class LogEntry
+{
+    public string Level { get; set; }
+    public string Message { get; set; }
+}
+
+public static class LogStats
+{
+    public static Dictionary<string, int> CountByLevel(List<LogEntry> logs)
+    {
+        var validLogEntries = new Dictionary<string, int>();
+        if (logs == null)
+        {
+            return validLogEntries;
+        }
+
+        foreach (var logEntry in logs)
+        {
+            if (logEntry == null)
+            {
+                continue;
+            }
+            if (string.IsNullOrWhiteSpace(logEntry.Level))
+            {
+                continue;
+            }
+            if (string.IsNullOrWhiteSpace(logEntry.Message))
+            {
+                continue;
+            }
+
+            var Key = logEntry.Level.ToUpperInvariant();
+
+            if (validLogEntries.ContainsKey(Key))
+            {
+                validLogEntries[Key]++;
+            }
+            else
+            {
+                validLogEntries[Key] = 1;
+            }
+        }
+
+        return validLogEntries;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var logs = new List<LogEntry>
+        {
+            new LogEntry { Level = "Info", Message = "Started" },
+            new LogEntry { Level = "INFO", Message = "Running" },
+            new LogEntry { Level = "Error", Message = "Failure" },
+            new LogEntry { Level = "", Message = "Invalid" },    // ignore
+            null,
+            new LogEntry { Level = "Error", Message = "" }        // ignore
+        };
+
+        var result = LogStats.CountByLevel(logs);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // INFO => 2
+        // ERROR => 1
+    }
+}

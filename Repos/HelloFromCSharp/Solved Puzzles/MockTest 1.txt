@@ -1,0 +1,88 @@
+using System;
+using System.Collections.Generic;
+
+//Problem Summary
+//You are given a list of sessions. Each session has a UserId and a DurationMinutes.
+//Return a dictionary that maps each user to their total session duration.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null sessions
+//Ignore sessions where:
+//UserId is null or empty
+//DurationMinutes is less than or equal to 0
+//UserId matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Do not throw exceptions
+
+public class Session
+{
+    public string UserId { get; set; }
+    public int DurationMinutes { get; set; }
+}
+
+public static class SessionStats
+{
+    public static Dictionary<string, int> TotalDurationByUser(List<Session> sessions)
+    {
+        var totalSessionDuration = new Dictionary<string, int>();
+        if (sessions == null)
+        {
+            return totalSessionDuration;
+        }
+
+        foreach (var session in sessions)
+        {
+            if (session == null)
+            {
+                continue;
+            }
+            if (string.IsNullOrWhiteSpace(session.UserId))
+            {
+                continue;
+            }
+            if (session.DurationMinutes <= 0)
+            {
+                continue;
+            }
+
+            var Key = session.UserId.ToUpperInvariant();
+
+            if (totalSessionDuration.ContainsKey(Key))
+            {
+                totalSessionDuration[Key] += session.DurationMinutes;
+            }
+            else
+            {
+                totalSessionDuration[Key] = session.DurationMinutes;
+            }
+        }
+
+        return totalSessionDuration;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var sessions = new List<Session>
+        {
+            new Session { UserId = "Alice", DurationMinutes = 30 },
+            new Session { UserId = "alice", DurationMinutes = 45 },
+            new Session { UserId = "Bob", DurationMinutes = 20 },
+            new Session { UserId = "", DurationMinutes = 50 },     // ignore
+            null,
+            new Session { UserId = "Bob", DurationMinutes = -10 }  // ignore
+        };
+
+        var result = SessionStats.TotalDurationByUser(sessions);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // ALICE => 75
+        // BOB => 20
+    }
+}
