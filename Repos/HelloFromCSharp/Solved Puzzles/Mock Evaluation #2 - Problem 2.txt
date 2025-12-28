@@ -1,0 +1,124 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
+using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+//Problem Summary
+//You are given a list of support tickets. Each ticket has a Team, a Priority, and an IsResolved flag.
+//Return a dictionary mapping each team to a summary with:
+//OpenCount = number of valid tickets for that team where IsResolved == false
+//HighPriorityOpenCount = number of valid tickets for that team where IsResolved == false and Priority >= 4
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null tickets
+//Ignore tickets where:
+//Team is null or empty
+//Priority is outside the range 1–5 (inclusive)
+//Team matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Only open tickets (IsResolved == false) count toward either field
+//Do not throw exceptions
+
+public class SupportTicket
+{
+    public string Team { get; set; }
+    public int Priority { get; set; }      // expected 1..5
+    public bool IsResolved { get; set; }
+}
+
+public class TeamTicketSummary
+{
+    public int OpenCount { get; set; }
+    public int HighPriorityOpenCount { get; set; }
+}
+
+public static class TicketStats
+{
+    public static Dictionary<string, TeamTicketSummary> BuildTeamSummaries(List<SupportTicket> tickets)
+    {
+        //uTTS, short for "unresolvedTeamTicketSummary"
+        var uTTS = new Dictionary<string, TeamTicketSummary>();
+
+        if (tickets == null)
+        {
+            return uTTS;
+        }
+
+        foreach (var supportTicket in tickets)
+        {
+            if (supportTicket == null)
+            {
+                continue; 
+            }
+
+            if (string.IsNullOrWhiteSpace(supportTicket.Team))
+            {
+                continue;
+            }
+
+            if (supportTicket.Priority < 1 || supportTicket.Priority > 5)
+            {
+                continue;
+            }
+
+            if (supportTicket.IsResolved)
+            {
+                continue;
+            }
+
+            var teamTicket = supportTicket.Team.ToUpperInvariant();
+
+            if (uTTS.ContainsKey(teamTicket))
+            {
+
+                uTTS[teamTicket].OpenCount++;
+
+                if(supportTicket.Priority >= 4)
+                {
+                    uTTS[teamTicket].HighPriorityOpenCount++;
+                }
+
+            }
+            else
+            {
+                uTTS[teamTicket] = new TeamTicketSummary();
+                uTTS[teamTicket].OpenCount = 1;
+
+                if (supportTicket.Priority >= 4)
+                {
+                    uTTS[teamTicket].HighPriorityOpenCount = 1;
+                }
+            }
+        }
+
+        return uTTS;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var tickets = new List<SupportTicket>
+        {
+            new SupportTicket { Team = "Backend", Priority = 5, IsResolved = false },
+            new SupportTicket { Team = "backend", Priority = 4, IsResolved = false },
+            new SupportTicket { Team = "Backend", Priority = 2, IsResolved = true },   // resolved, ignore
+            new SupportTicket { Team = "Frontend", Priority = 3, IsResolved = false },
+            new SupportTicket { Team = "Frontend", Priority = 6, IsResolved = false }, // invalid priority, ignore
+            null,
+            new SupportTicket { Team = "", Priority = 5, IsResolved = false }          // ignore
+        };
+
+        var result = TicketStats.BuildTeamSummaries(tickets);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key}: Open={kvp.Value.OpenCount}, High={kvp.Value.HighPriorityOpenCount}");
+
+        // Expected output (order doesn't matter):
+        // BACKEND: Open=2, High=2
+        // FRONTEND: Open=1, High=0
+    }
+}

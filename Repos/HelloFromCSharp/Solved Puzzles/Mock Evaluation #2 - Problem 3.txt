@@ -1,0 +1,124 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Metrics;
+using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
+
+//Problem Summary
+//You are given a list of strings representing inventory updates in the format:
+//< warehouse >|< sku >|< delta >
+
+//Examples:
+//BERLIN | A12 | 5
+//berlin | A12 | -2
+//Return a dictionary mapping each warehouse (uppercase) to the net inventory delta across all valid lines.
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null or whitespace lines
+//Ignore lines that do not have exactly 3 |-separated parts
+//Trim whitespace around each part
+//Ignore lines where:
+//warehouse is null / empty after trimming
+//sku is null/empty after trimming
+//delta cannot be parsed as int
+//delta is 0
+//Warehouse matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Net delta is the sum of all deltas per warehouse
+//Do not throw exceptions
+
+public static class InventoryStats
+{
+    public static Dictionary<string, int> NetDeltaByWarehouse(List<string> lines)
+    {
+        var result = new Dictionary<string, int>();
+
+        if (lines == null)
+        {
+            return result;
+        }
+
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue; 
+            }
+
+            var parts = line.Split('|');
+
+            if (parts.Length != 3)
+            {
+                continue;
+            }
+
+            var warehouse = parts[0].Trim();
+            var sku = parts[1].Trim();
+            var deltaText = parts[2].Trim();
+
+            if (string.IsNullOrWhiteSpace(warehouse))
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(sku))
+            {
+                continue;
+            }
+
+            if (!int.TryParse(deltaText, out var delta))
+            {
+                continue;
+            }
+
+            if (delta == 0)
+            {
+                continue;
+            }
+
+            var key = warehouse.ToUpperInvariant();
+
+            if (result.ContainsKey(key))
+            {
+                result[key] += delta;
+            }
+            else
+            {
+                result[key] = delta;
+            }
+            
+        }
+
+        return result;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var lines = new List<string>
+        {
+            "BERLIN|A12|5",
+            "berlin|A12|-2",
+            "Paris|B99|10",
+            "Paris|B99|0",          // ignore (delta 0)
+            "BadLineNoSeparators",  // ignore
+            "ROME||3",              // ignore (missing sku)
+            " |X1|4",               // ignore (missing warehouse after trim)
+            null,
+            "  BERLIN | C7 | 1  "
+        };
+
+        var result = InventoryStats.NetDeltaByWarehouse(lines);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // BERLIN => 4   (5 - 2 + 1)
+        // PARIS => 10
+    }
+}

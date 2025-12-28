@@ -1,0 +1,127 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Metrics;
+using System.Globalization;
+
+//Problem Summary
+//You are given a list of strings representing stock movements in the format:
+//< location >|< itemCode >|< quantity >
+
+//Examples:
+//"NY|A12|5"
+//"ny|A12|-3"
+
+//Return a dictionary that maps each location to the net quantity (sum of all valid quantities).
+
+//Requirements
+//If the list is null, return an empty dictionary
+//Ignore null or whitespace lines
+//Ignore lines that do not have exactly 3 |-separated parts
+//Trim whitespace around each part
+//Ignore lines where:
+//location is null or empty after trimming
+//itemCode is null or empty after trimming
+//quantity cannot be parsed as int
+//quantity is 0
+//Location matching is case-insensitive
+//Output dictionary keys must be UPPERCASE
+//Net quantity is the sum of all valid quantities per location
+//Do not throw exceptions
+
+public static class StockStats
+{
+    public static Dictionary<string, int> NetQuantityByLocation(List<string> lines)
+    {
+        var result = new Dictionary<string, int>();
+        if (lines == null)
+        {
+            return result; 
+        }
+
+        foreach (var line in lines)
+        {
+            if (line == null) 
+            { 
+                continue; 
+            }
+
+            if(string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            var parts = line.Split('|');
+
+            if (parts.Length != 3)
+            {
+                continue;
+            }
+
+            var location = parts[0].Trim();
+            var itemCode = parts[1].Trim();
+            var quantityText = parts[2].Trim();
+
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(itemCode))
+            {
+                continue;
+            }
+
+            if (!int.TryParse(quantityText, out var quantity))
+            {
+                continue;
+            }
+
+            if (quantity == 0)
+            {
+                continue;
+            }
+
+            var key = location.ToUpperInvariant();
+
+            if (result.ContainsKey(key))
+            {
+                result[key] += quantity;
+            }
+            else
+            {
+                result[key] = quantity;
+            }
+        }
+
+        return result;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var lines = new List<string>
+        {
+            "NY|A12|5",
+            "ny|A12|-3",
+            "LA|B99|10",
+            "LA|B99|0",           // ignore
+            "BadLine",            // ignore
+            "SF||4",              // ignore (missing itemCode)
+            " |X1|7",             // ignore (missing location)
+            null,
+            "  NY | C7 | 2  "
+        };
+
+        var result = StockStats.NetQuantityByLocation(lines);
+
+        foreach (var kvp in result)
+            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+
+        // Expected output (order doesn't matter):
+        // NY => 4   (5 - 3 + 2)
+        // LA => 10
+    }
+}
