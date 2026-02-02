@@ -1,125 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection.Metadata.Ecma335;
 
-//Problem Summary
-//You are given a list of strings representing sales records in the format:
-//< region >,< productCode >,< amount >
-//Return a dictionary mapping each region to the total sales amount.
-
-//Requirements
-//If the list is null, return an empty dictionary
-//Ignore null or whitespace lines
-//Ignore lines that do not have exactly 3 comma-separated parts
-//Trim whitespace around each part
-//Ignore lines where:
-//region is null or empty after trimming
-//productCode is null or empty after trimming
-//amount cannot be parsed as decimal
-//amount is less than or equal to 0
-//Region matching is case-insensitive
-//Output dictionary keys must be UPPERCASE
-//Total is the sum of all valid amounts per region
-//Do not throw exceptions
-
-public static class SalesStats
+class Program
 {
-    public static Dictionary<string, decimal> TotalSalesByRegion(List<string> lines)
+    // This matches what the platform usually calls
+    public static int[] solution(int[] numbers)
     {
-        var result = new Dictionary<string, decimal>();
+        if (numbers == null || numbers.Length < 3)
+            return Array.Empty<int>();
 
-        if (lines == null)
+        int n = numbers.Length;
+        int[] result = new int[n - 2];
+
+        for (int i = 0; i < n - 2; i++)
         {
-            return result;
-        }
+            int a = numbers[i];
+            int b = numbers[i + 1];
+            int c = numbers[i + 2];
 
-        foreach (var line in lines)
-        {
-            if (line == null)
+            bool zigzag = (a < b && b > c) || (a > b && b < c);
+
+            if (zigzag)
             {
-                continue; 
-            }
-
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
-
-            var parts = line.Split(',');
-
-            if (parts.Length != 3)
-            {
-                continue;
-            }
-
-            var region = parts[0].Trim();
-            var productCode = parts[1].Trim();
-            var amountText = parts[2].Trim();
-
-            if (string.IsNullOrWhiteSpace(region))
-            {
-                continue;
-            }
-
-            if (string.IsNullOrWhiteSpace(productCode))
-            {
-                continue;
-            }
-
-            // If parsing decimals from strings that use . ("19.95") -> use NumberStyles.Number, CultureInfo.InvariantCulture
-            // decimal.TryParse(string) uses the current OS culture by default. The result for SWE keyboard would return false since it expects ("19,95") NOT ("19.95")
-            if (!decimal.TryParse(amountText, NumberStyles.Number, CultureInfo.InvariantCulture, out var amount))
-            {
-                continue;
-            }
-
-            if (amount <= 0)
-            {
-                continue;
-            }
-
-            var key = region.ToUpperInvariant();
-
-            if (result.ContainsKey(key))
-            {
-                result[key] += amount;
+                result[i] = 1;
             }
             else
             {
-                result[key] = amount;
+                result[i] = 0;
             }
-
         }
 
         return result;
     }
-}
 
-public class Program
-{
-    public static void Main()
+    // This is ONLY for local testing
+    static void Main()
     {
-        var lines = new List<string>
-        {
-            "EU,PRD1,19.95",
-            "eu,PRD2,10.05",
-            "US,PRD3,50",
-            "US,PRD4,0",           // ignore
-            "BadLine",             // ignore
-            "APAC,,25",             // ignore (missing productCode)
-            " ,X1,5",               // ignore (missing region)
-            null,
-            "  EU , P9 , 5.00  "
-        };
+        int[] numbers = { 1, 2, 1, 3, 4 };
 
-        var result = SalesStats.TotalSalesByRegion(lines);
+        int[] output = solution(numbers);
 
-        foreach (var kvp in result)
-            Console.WriteLine($"{kvp.Key} => {kvp.Value}");
-
-        // Expected output:
-        // EU => 35
-        // US => 50
+        Console.WriteLine(string.Join(", ", output));
+        // Expected: 1, 1, 0
     }
 }

@@ -1,0 +1,27 @@
+// Split string line ("1,2,3") into 3 parts.
+var parts = line.Split(',');
+
+//Check if the string contains 3 parts (ignore invalid data)
+if (parts.Length != 3)           
+{                
+  continue;            
+}
+
+// Assign new variable to string parts
+// Trim() (remove) all trailing whitespace characters
+var region = parts[0].Trim();
+var productCode = parts[1].Trim();
+var amountText = parts[2].Trim();
+
+// If parsing decimals from strings that use . ("19.95") -> use NumberStyles.Number, CultureInfo.InvariantCulture
+
+// decimal.TryParse(string) uses the current OS culture by default. 
+// The result for SWE keyboard would return false since it expects ("19,95") NOT ("19.95")
+if (!decimal.TryParse(amountText, NumberStyles.Number, CultureInfo.InvariantCulture, out var amount))
+{
+  continue;
+}
+
+//Region matching is case-insensitive ("dog" and "Dog" are of the same significance)
+//Outputs dictionary keys to UPPERCASE
+var key = region.ToUpperInvariant();
