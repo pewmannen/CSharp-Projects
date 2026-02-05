@@ -1,7 +1,2 @@
-﻿// Using only Top-Level statements for Program.cs
-using BethanysPieShopHRM;
-
-Utilities.ParsingStrings();
-
-Console.ReadLine();
-
+﻿// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
